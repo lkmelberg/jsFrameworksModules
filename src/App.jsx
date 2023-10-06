@@ -1,57 +1,69 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import addProduct, { incrementProduct } from "./store/products/products";
-import "./App.css";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-export const dispatch = useDispatch();
+const schema = yup
+  .object({
+    fullName: yup
+      .string()
+      .min(3, "Your name should be at least 3 characters.")
+      .max(10, "Your first name cannot be longer than 10 characters.")
+      .required("Please enter your first name"),
+    email: yup.string().email().required(),
+    subject: yup
+      .string()
+      .min(3, "Your subject should be at least 3 characters.")
+      .max(100, "Your subject cannot be longer than 100 characters.")
+      .required("Please enter subject"),
+    body: yup
+      .string()
+      .min(3, "Your body should be at least 3 characters.")
+      .max(1000, "Your body cannot be longer than 100 characters.")
+      .required("Please enter body"),
+  })
+  .required();
 
 function App() {
-  const [productTitle, setProduct] = useState("");
-  const products = [...useSelector((state) => state.products)].sort((a, b) => {
-    return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    dispatch(addProduct(productTitle));
-    setProduct("");
-  };
+  function onSubmit(data) {
+    console.log(data);
+  }
 
   return (
-    <div className="wrapper">
-      <h1>Product List</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Add Product</p>
-          <input
-            type="text"
-            onChange={(e) => setProduct(e.target.value)}
-            value={productTitle}
-          />
-        </label>
-        <div>
-          <button type="submit">Add</button>
-        </div>
-      </form>
-      <ul>
-        {products.map((product) => (
-          <li key={product.title}>
-            <h3>{product.title}</h3>
-            <div>Price: {product.price}</div>
-            <div>
-              Qty in cart: {product.count}
-              <button onClick={() => dispatch(incrementProduct())}>
-                <span role="img" aria-label="add">
-                  ➕
-                </span>
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input placeholder="Your subject" {...register("fullName")} />
+      <p>{errors.fullName?.message}</p>
+      <input {...register("email")} />
+      <p>{errors.email?.message}</p>
+      <input {...register("subject")} />
+      <p>{errors.subject?.message}</p>
+      <input {...register("body")} />
+      <p>{errors.body?.message}</p>
+      <input type="submit" />
+    </form>
   );
-  console.log("works");
 }
 
 export default App;
+
+// Level 1 process
+
+//     Create a new CRA or reuse an existing one.
+
+//     In App.js, or another component, create a form that contains the following inputs.
+
+//     2.1 fullName: A string. Must be greater than 3 characters and less than 50 characters. Required field.
+
+//     2.2 email: A string. Must be a valid email address (use email() or a Regex pattern). Required field.
+
+//     2.3 subject: A string. Must be greater than 3 characters and less than 100 characters. Required field.
+
+//     2.4 body: A string. Must be greater than 3 characters and less than 1000 characters. Required field.
