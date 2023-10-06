@@ -54,7 +54,6 @@ function products(state = defaultProducts, action) {
         ...state,
         {
           title: action.product,
-          price: action.product,
         },
       ];
     case INCREMENT_PRODUCT:

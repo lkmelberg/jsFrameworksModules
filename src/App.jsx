@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import addProduct, { incrementProduct } from "./store/products/products";
 import "./App.css";
 
+export const dispatch = useDispatch();
+
 function App() {
   const [productTitle, setProduct] = useState("");
   const products = [...useSelector((state) => state.products)].sort((a, b) => {
     return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
   });
-  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,7 +20,7 @@ function App() {
   return (
     <div className="wrapper">
       <h1>Product List</h1>
-      {/* <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <label>
           <p>Add Product</p>
           <input
@@ -31,14 +32,15 @@ function App() {
         <div>
           <button type="submit">Add</button>
         </div>
-      </form> */}
-      {/* <ul>
+      </form>
+      <ul>
         {products.map((product) => (
           <li key={product.title}>
             <h3>{product.title}</h3>
+            <div>Price: {product.price}</div>
             <div>
-              Views: {product.price}
-              <button onClick={() => dispatch(incrementProduct(product.title))}>
+              Qty in cart: {product.count}
+              <button onClick={() => dispatch(incrementProduct())}>
                 <span role="img" aria-label="add">
                   ➕
                 </span>
@@ -46,7 +48,7 @@ function App() {
             </div>
           </li>
         ))}
-      </ul> */}
+      </ul>
     </div>
   );
   console.log("works");
