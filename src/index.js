@@ -3,10 +3,13 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
-import { store } from "./store";
-// Import the Provider from `react-redux`
+import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
+import productApp from "./store/products/products";
+
+// Import the Provider from `react-redux`
+
+const store = configureStore(productApp);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 // Wrap <App /> with our react-redux Provider, passing in the store
